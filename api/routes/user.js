@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const checkAuth = require('../middleware/check-auth');
 const User = require("../models/user");
 
 //find user
@@ -21,14 +22,14 @@ router.get("/:id", (req, res, next) => {
     })
 });
 
-router.post("/:id/like", (req, res, next) => {
+router.post("/:id/like", checkAuth, (req, res, next) => {
     const id = req.params.id;
     res.status(201).json({
         message: "liked",
     });
 });
 
-router.delete("/:id/unlike", (req, res, next) => {
+router.delete("/:id/unlike", checkAuth, (req, res, next) => {
     const id = req.params.id;
     res.status(201).json({
         message: "unliked",

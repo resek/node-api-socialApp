@@ -30,8 +30,20 @@ router.post("/signup", (req, res, next) => {
                                 newUser
                                     .save()
                                     .then(() => {
+                                        const token = jwt.sign(
+                                            {
+                                                username: newUser.username,
+                                                email: newUser.email,
+                                                userId: newUser._id
+                                            },
+                                            process.env.JWT_KEY,
+                                            {
+                                                expiresIn: "12h"
+                                            }
+                                        );
                                         res.status(201).json({
                                             message: "You have successfully signed up",
+                                            token: token
                                         });
                                     })
                                     .catch(err =>  {
@@ -53,13 +65,14 @@ router.post("/login", (req, res, next) => {
             if (foundUser.length < 1) {
                 return res.status(401).json({message: "Auth failed"});
             }
-            bcrypt.compare(req.body.password, user[0].password, (err, result) => {
+            bcrypt.compare(req.body.password, foundUser[0].password, (err, result) => {
                 if (err) {
                     return res.status(401).json({message: "Auth failed"});
                 }
                 if (result) {
                     const token = jwt.sign(
-                        {
+                        {   
+                            username: foundUser[0].username,
                             email: foundUser[0].email,
                             userId: foundUser[0]._id
                         },
@@ -76,7 +89,7 @@ router.post("/login", (req, res, next) => {
                 res.status(401).json({message: "Auth failed"});
             });
         });       
-});
+});    
 
 //get all users and sort by likes
 router.get("/most-liked", (req, res, next) => {
