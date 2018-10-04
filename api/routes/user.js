@@ -4,37 +4,67 @@ const checkAuth = require('../middleware/check-auth');
 const User = require("../models/user");
 
 //find user
-router.get("/:id", (req, res, next) => {
-    id = req.params.id;
-    User.findById(id)
-    .select("-__v")
-    .exec()
-    .then(docs => {
-        if(docs) {
-            res.status(200).json(docs);
-        } else {
-            res.status(404).json({message: "No valid entry found"})
-        }        
-    })
-    .catch(err => {
-        console.log(err);
-        res.status(500).json({error: err});
-    })
+router.get("/:id", (req, res) => {
+    User.findById(req.params.id)
+        .select("-__v -password")
+        .exec()
+        .then(foundUser => {
+            res.status(200).json(foundUser);       
+        })
+        .catch(err => {res.status(500).json({error: err});
+        });        
 });
 
-router.post("/:id/like", checkAuth, (req, res, next) => {
-    const id = req.params.id;
-    res.status(201).json({
-        message: "liked",
-    });
+//like user
+router.patch("/:id/like", checkAuth, (req, res) => {
+    User.findById(req.params.id)
+        .exec()
+        .then(foundUser => {
+            const idsArr = foundUser.likes.idsArr;
+            const logInUserId = req.userData.userId;
+            if (idsArr.includes(logInUserId)) {
+                res.status(403).json({
+                    message: `You can't like ${foundUser.username} twice`
+                });
+            } else if (logInUserId == foundUser._id) {
+                res.status(403).json({
+                    message: "You can not like youself"
+                });
+            } else {
+                idsArr.push(logInUserId);
+                foundUser.likes.likesCount = idsArr.length;
+                foundUser.save();
+                res.status(200).json({
+                    messege: `You have liked ${foundUser.username}`
+                });
+            }        
+        })
+        .catch(err => {res.status(500).json({error: err});
+        });        
 });
 
-router.delete("/:id/unlike", checkAuth, (req, res, next) => {
-    const id = req.params.id;
-    res.status(201).json({
-        message: "unliked",
-    });
+//unlike user
+router.patch("/:id/unlike", checkAuth, (req, res) => {
+    User.findById(req.params.id)
+        .exec()
+        .then(foundUser => {
+            const idsArr = foundUser.likes.idsArr;
+            const index = idsArr.indexOf(req.userData.userId);
+            if (index > -1)  {
+                idsArr.splice(index, 1);
+                foundUser.likes.likesCount = idsArr.length;
+                foundUser.save();
+                res.status(200).json({
+                    message: `You have unliked ${foundUser.username}`
+                });
+            } else {            
+                res.status(403).json({
+                    messege: `You do not like ${foundUser.username} ;)`
+                });
+            } 
+        })
+        .catch(err => {res.status(500).json({error: err});
+        });
 });
-
 
 module.exports = router;

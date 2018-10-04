@@ -6,10 +6,7 @@ const User = require("../models/user");
 
 //get logged in user info
 router.get("/", checkAuth, (req, res, next) => {
-    res.status(200).json({
-        message: "Currently logged in user infomation",
-        userData: req.userData
-    });
+    res.status(200).json(req.userData);
 });
 
 //password update

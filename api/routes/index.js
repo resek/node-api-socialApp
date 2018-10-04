@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const User = require("../models/user");
 
 //signup
-router.post("/signup", (req, res, next) => {
+router.post("/signup", (req, res) => {
     const newEmail = req.body.email.toLowerCase();
     User.find({email: newEmail})
         .exec()
@@ -58,7 +58,7 @@ router.post("/signup", (req, res, next) => {
 });
 
 //login with JWT
-router.post("/login", (req, res, next) => {
+router.post("/login", (req, res) => {
     User.find({email: req.body.email.toLowerCase()})
         .exec()
         .then(foundUser => {            
@@ -91,31 +91,18 @@ router.post("/login", (req, res, next) => {
         });       
 });    
 
-//get all users and sort by likes
-router.get("/most-liked", (req, res, next) => {
+//get all users and sort by most likes
+router.get("/most-liked", (req, res) => {
     User.find()
-    .select("username email _id")
-    .exec()
-    .then(docs => {
-        const response = {
-            count: docs.length,
-            users: docs.map(doc => {
-                return {
-                    username: doc.username,
-                    email: doc.email,
-                    _id: doc._id,
-                    request: {
-                        type: "GET",
-                        url: process.env.USER_URL + doc._id
-                    }
-                }
-            })
-        }
-        res.status(200).json(response);
-    })
-    .catch(err => {
-        res.status(500).json({error: err})
-    });
+        .select("-password -__v")
+        .sort({"likes.likesCount": -1})     
+        .exec()
+        .then(foundUsers => {
+            res.status(200).json(foundUsers);
+        })            
+        .catch(err => {
+            res.status(500).json({error: err})
+        });
 });
 
 module.exports = router;
