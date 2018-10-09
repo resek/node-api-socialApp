@@ -53,4 +53,4 @@ app.use((error, req, res, next) => {
 });
 
 //server config
-app.listen(process.env.PORT || 3000, () => console.log("Server has started!"))
+app.listen(process.env.PORT || 4000, () => console.log("Server has started!"))
