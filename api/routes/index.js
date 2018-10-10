@@ -38,7 +38,7 @@ router.post("/signup", (req, res) => {
                                             },
                                             process.env.JWT_KEY,
                                             {
-                                                expiresIn: "12h"
+                                                expiresIn: "1h"
                                             }
                                         );
                                         res.status(201).json({
@@ -78,7 +78,7 @@ router.post("/login", (req, res) => {
                         },
                         process.env.JWT_KEY,
                         {
-                            expiresIn: "12h"
+                            expiresIn: "1h"
                         }
                     );
                     return res.status(200).json({
