@@ -59,7 +59,7 @@ router.patch("/:id/unlike", checkAuth, (req, res) => {
                 });
             } else {            
                 res.status(403).json({
-                    messege: `You do not like ${foundUser.username} ;)`
+                    message: `You have not liked ${foundUser.username} before`
                 });
             } 
         })

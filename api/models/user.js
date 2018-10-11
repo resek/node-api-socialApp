@@ -9,10 +9,10 @@ const userSchema = mongoose.Schema({
         maxlength: 256,
         match: /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/ 
     },
-    password: {type: String, required: true, maxlength: 256 },
+    password: {type: String, required: true, maxlength: 256},
     likes: {
         idsArr: Array,
-        likesCount: {type: Number, default: 0, unique: true}
+        likesCount: {type: Number, default: 0}
     }
 });
 

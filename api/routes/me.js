@@ -19,7 +19,7 @@ router.patch("/update-password", checkAuth, (req, res, next) => {
                 if (err) {
                     res.status(500).json({error: err});
                 } else {
-                    User.updateOne({_id: req.userData.userId}, {$set: {password: hash}})
+                    User.updateOne({_id: req.body.userId}, {$set: {password: hash}})
                         .exec()
                         .then(() => {
                             res.status(200).json({message: 'Password updated'});

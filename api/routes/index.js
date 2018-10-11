@@ -12,7 +12,7 @@ router.post("/signup", (req, res) => {
         .then(user => {
              //User.find returns empty array if no user email
             if (user.length >= 1) {
-                res.status(409).json({message: "Email already exist!"})
+                res.status(409).json({message: "Email already exist"})
             } else {
                 bcrypt.genSalt(10, (err, salt) => {
                     if (err) {
@@ -65,6 +65,8 @@ router.post("/login", (req, res) => {
             if (foundUser.length < 1) {
                 return res.status(401).json({message: "Auth failed"});
             }
+            console.log(req.body.password);
+            console.log(foundUser[0].password);
             bcrypt.compare(req.body.password, foundUser[0].password, (err, result) => {
                 if (err) {
                     return res.status(401).json({message: "Auth failed"});
