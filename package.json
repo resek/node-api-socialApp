@@ -4,7 +4,8 @@
   "description": "A Node.js RESTful API for simple social app",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
   },
   "author": "Resek",
   "license": "ISC",
@@ -12,6 +13,7 @@
     "bcryptjs": "^2.4.3",
     "dotenv": "^6.1.0",
     "express": "^4.16.4",
+    "helmet": "^3.14.0",
     "jsonwebtoken": "^8.3.0",
     "mongoose": "^5.3.2",
     "morgan": "^1.9.1"

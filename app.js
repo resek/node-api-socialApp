@@ -1,4 +1,5 @@
 const express = require('express');
+const helmet = require('helmet');
 const app = express();
 const morgan = require('morgan');
 const bodyParser = require("body-parser");
@@ -12,6 +13,7 @@ const indexRoutes = require("./api/routes/index");
 mongoose.connect(`mongodb+srv://resek:${process.env.MONGO_ATLAS_PW}@cluster0-5r5fe.mongodb.net/socialApp?retryWrites=true`, { useNewUrlParser: true, useCreateIndex: true });
 
 //app config
+app.use(helmet());
 app.use(morgan("dev"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
